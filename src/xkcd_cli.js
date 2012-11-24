@@ -200,8 +200,7 @@ Filesystem = {
 			terminal.print('Gmail/Gtalk: ');
 			terminal.print('echo Y2xhcmVseWZAZ21haWwuY29tCg== | base64 -d');
 			terminal.print('QQ: ');
-			terminal.print('Gmail/Gtalk: ');
-			terminal.pring('echo NDc3MzE5MTYK | base64 -d');
+			terminal.print('echo NDc3MzE5MTYK | base64 -d');
 		}
 	},
 };
