@@ -187,45 +187,37 @@ function linkFile(url) {
 }
 
 Filesystem = {
-	'welcome.txt': {type:'file', read:function(terminal) {
-		terminal.print($('<h4>').text('Welcome to the unixkcd console.'));
-		terminal.print('To navigate the comics, enter "next", "prev", "first", "last", "display", or "random".');
-		terminal.print('Use "ls", "cat", and "cd" to navigate the filesystem.');
-	}},
-	'license.txt': {type:'file', read:function(terminal) {
-		terminal.print($('<p>').html('Client-side logic for Wordpress CLI theme :: <a href="http://thrind.xamai.ca/">R. McFarland, 2006, 2007, 2008</a>'));
-		terminal.print($('<p>').html('jQuery rewrite and overhaul :: <a href="http://www.chromakode.com/">Chromakode, 2010</a>'));
-		terminal.print();
-		$.each([
-			'This program is free software; you can redistribute it and/or',
-			'modify it under the terms of the GNU General Public License',
-			'as published by the Free Software Foundation; either version 2',
-			'of the License, or (at your option) any later version.',
-			'',
-			'This program is distributed in the hope that it will be useful,',
-			'but WITHOUT ANY WARRANTY; without even the implied warranty of',
-			'MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the',
-			'GNU General Public License for more details.',
-			'',
-			'You should have received a copy of the GNU General Public License',
-			'along with this program; if not, write to the Free Software',
-			'Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.'
-		], function(num, line) {
-			terminal.print(line);
-		});
-	}}
+	'welcome.txt': {
+		type: 'file', 
+		read: function(terminal) {
+			terminal.print($('<h4>').text('Welcome to infong.me.'));
+			terminal.print('To navigate the comics, enter "next", "prev", "first", "last", "display", or "random".');
+			terminal.print('Use "ls", "cat", and "cd" to navigate the filesystem.');
+		}
+	},
+	'contact.txt': {
+		type: 'file',
+		read: function(terminal) {
+			terminal.print('Gmail/Gtalk: ');
+			terminal.print('echo Y2xhcmVseWZAZ21haWwuY29tCg== | base64 -d');
+			terminal.print('QQ: ');
+			terminal.print('Gmail/Gtalk: ');
+			terminal.pring('echo NDc3MzE5MTYK | base64 -d');
+		}
+	},
 };
-Filesystem['blog'] = Filesystem['blag'] = linkFile('http://blag.xkcd.com');
-Filesystem['forums'] = Filesystem['fora'] = linkFile('http://forums.xkcd.com/');
-Filesystem['store'] = linkFile('http://store.xkcd.com/');
-Filesystem['about'] = linkFile('http://xkcd.com/about/');
+Filesystem['blog'] = linkFile('http://infong.net/');
+Filesystem['weibo'] = linkFile('http://weibo.com/infong/');
+Filesystem['twitter'] = linkFile('http://twitter.com/nbclare/');
+Filesystem['github'] = linkFile('http://github.com/infong/');
 TerminalShell.pwd = Filesystem;
 
 TerminalShell.commands['cd'] = function(terminal, path) {
-	if (path in this.pwd) {
-		if (this.pwd[path].type == 'dir') {
-			this.pwd[path].enter(terminal);
-		} else if (this.pwd[path].type == 'file') {
+	var trimedPath = path.replace(/\/$/, '');
+	if (trimedPath in this.pwd) {
+		if (this.pwd[trimedPath].type == 'dir') {
+			this.pwd[trimedPath].enter(terminal);
+		} else if (this.pwd[trimedPath].type == 'file') {
 			terminal.print('cd: '+path+': Not a directory');
 		}
 	} else {
@@ -507,7 +499,16 @@ TerminalShell.commands['sleep'] = function(terminal, duration) {
 
 // No peeking!
 TerminalShell.commands['help'] = TerminalShell.commands['halp'] = function(terminal) {
-	terminal.print('That would be cheating!');
+	var $helps = [
+		'ls :    List directory contents.',
+		'cd :    Change the shell working directory.',
+		'cat :   Concatenate files and print on the standard output.',
+	];
+	var help_list = $('<ul>');
+	$.each($helps, function(num, line) {
+		help_list.append($('<li>').text(line));
+	});
+	terminal.print(help_list);
 }; 
 
 TerminalShell.fallback = function(terminal, cmd) {
@@ -594,10 +595,7 @@ $(document).ready(function() {
 		xkcd.get(null, function(data) {
 			if (data) {
 				xkcd.latest = data;
-				$('#screen').one('cli-ready', function(e) {
-					Terminal.runCommand('cat welcome.txt');
-				});
-				Terminal.runCommand('display '+xkcd.latest.num+'/'+pathFilename(xkcd.latest.img));
+				Terminal.promptActive = true;
 			} else {
 				noData();
 			}
