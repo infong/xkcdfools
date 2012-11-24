@@ -191,7 +191,6 @@ Filesystem = {
 		type: 'file', 
 		read: function(terminal) {
 			terminal.print($('<h4>').text('Welcome to infong.me.'));
-			terminal.print('To navigate the comics, enter "next", "prev", "first", "last", "display", or "random".');
 			terminal.print('Use "ls", "cat", and "cd" to navigate the filesystem.');
 		}
 	},
@@ -333,6 +332,28 @@ TerminalShell.commands['irc'] = function(terminal, nick) {
 
 TerminalShell.commands['unixkcd'] = function(terminal, nick) {
 	TerminalShell.commands['curl'](terminal, "http://www.xkcd.com/unixkcd/");
+};
+
+TerminalShell.commands['pacman'] = function(terminal, subcmd) {
+	if (!this.sudo && (subcmd in {'-S':true, '-Sy':true, '-Syy':true, '-Syu':true})) {
+		terminal.print('E: Unable to lock the administration directory, are you root?');
+	} else {
+		if (subcmd == '-S') {
+			terminal.print('Error: target not found.');
+		} else if (subcmd == '-Sy' || subcmd == '-Syy') {
+			terminal.print('Reading package lists... Done.');
+		} else if (subcmd == '-Syu') {
+			if (($.browser.name == 'msie') || ($.browser.name == 'firefox' && $.browser.versionX < 3)) {
+				terminal.print($('<p>').append($('<a>').attr('href', 'http://abetterbrowser.org/').text('To complete installation, click here.')));
+			} else {
+				terminal.print('This looks pretty good to me.');
+			}
+		} else if (subcmd == undefined || subcmd == 'sudo') {
+			terminal.print('error: no operation specified. ');
+		} else {
+			terminal.print('pacman: invalid option -- ' + subcmd);
+		}
+	}
 };
 
 TerminalShell.commands['apt-get'] = function(terminal, subcmd) {
