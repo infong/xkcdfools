@@ -286,6 +286,10 @@ TerminalShell.commands['cheat'] = function(terminal) {
 	terminal.print($('<a>').text('*** FREE SHIPPING ENABLED ***').attr('href', 'http://store.xkcd.com/'));
 }; 
 
+TerminalShell.commands['git'] = function(terminal) {
+	terminal.print($('<a>').text('Oh! Sure, find help here.').attr('href', 'http://git-scm.com/book/'));
+}
+
 TerminalShell.commands['reddit'] = function(terminal, num) {
 	num = Number(num);
 	if (num) {
@@ -563,7 +567,8 @@ TerminalShell.fallback = function(terminal, cmd) {
 		'use the source luke': 'I\'m not luke, you\'re luke!',
 		'serenity': 'You can\'t take the sky from me.',
 		'enable time travel': 'TARDIS error: Time Lord missing.',
-		'ed': 'You are not a diety.'
+		'ed': 'You are not a diety.',
+		'svn': 'You should really use git.'
 	};
 	oneliners['emacs'] = 'You should really use vim.';
 	oneliners['vi'] = oneliners['vim'] = 'You should really use emacs.';
@@ -597,7 +602,7 @@ TerminalShell.fallback = function(terminal, cmd) {
 		} else if (/:\(\)\s*{\s*:\s*\|\s*:\s*&\s*}\s*;\s*:/.test(cmd)) {
 			Terminal.setWorking(true);
 		} else {
-			$.get("/unixkcd/missing", {cmd: cmd});
+//			$.get("/unixkcd/missing", {cmd: cmd});
 			return false;
 		}
 	}
@@ -612,14 +617,14 @@ $(document).ready(function() {
 		Terminal.promptActive = true;
 	}
 	$('#screen').bind('cli-load', function(e) {
-		xkcd.get(null, function(data) {
-			if (data) {
-				xkcd.latest = data;
+//		xkcd.get(null, function(data) {
+//			if (data) {
+//				xkcd.latest = data;
 				Terminal.promptActive = true;
-			} else {
-				noData();
-			}
-		}, noData);
+//			} else {
+//				noData();
+//			}
+//		}, noData);
 	});
 	
 	$(document).konami(function(){
